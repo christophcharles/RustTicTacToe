@@ -5,3 +5,4 @@ authors = ["Christoph Charles <c.charles.dev@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.6"

@@ -23,11 +23,13 @@ fn init_player(symbol: TicTacToeSymbol)
         println!("Select the type of player by typing one of the following single letters:");
         println!(" - enter 'h' for a human player;");
         println!(" - enter 's' for a simple computer player;");
+        println!(" - enter 'r' for a random computer player;");
         println!(" - enter 'c' for a more robust computer player.");
 
         match get_letter_from_user() {
             Some('h') => return Box::new(human_player::HumanPlayer::new(symbol)),
             Some('s') => return Box::new(computer_player::SimpleComputerPlayer::new(symbol)),
+            Some('r') => return Box::new(computer_player::RandomComputerPlayer::new(symbol)),
             Some('c') => println!("Robust computer player not supported yet. Try again."),
             _ => println!("Invalid entry. Try again.")
         }
