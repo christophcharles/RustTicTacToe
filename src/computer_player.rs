@@ -59,3 +59,32 @@ impl Player<TicTacToeState, TicTacToeMove, TicTacToeSymbol> for RandomComputerPl
         }
     }
 }
+
+pub struct MinimaxComputerPlayer {
+    symbol: TicTacToeSymbol,
+}
+
+impl MinimaxComputerPlayer {
+    pub fn new(symbol: TicTacToeSymbol) -> MinimaxComputerPlayer {
+        MinimaxComputerPlayer {
+            symbol: symbol,
+        }
+    }
+}
+
+impl Player<TicTacToeState, TicTacToeMove, TicTacToeSymbol> for MinimaxComputerPlayer {
+    fn get_symbol(&self) -> TicTacToeSymbol {
+        self.symbol
+    }
+    fn get_next_move(&self, game_state: &TicTacToeState) -> TicTacToeMove {
+        loop {
+            let i = rand::thread_rng().gen_range(0,3);
+            let j = rand::thread_rng().gen_range(0,3);
+
+            let computer_move = TicTacToeMove(i as u32, j as u32);
+            if game_logic::is_move_valid(game_state, &computer_move) {
+                return computer_move;
+            }
+        }
+    }
+}

@@ -30,7 +30,7 @@ fn init_player(symbol: TicTacToeSymbol)
             Some('h') => return Box::new(human_player::HumanPlayer::new(symbol)),
             Some('s') => return Box::new(computer_player::SimpleComputerPlayer::new(symbol)),
             Some('r') => return Box::new(computer_player::RandomComputerPlayer::new(symbol)),
-            Some('c') => println!("Robust computer player not supported yet. Try again."),
+            Some('c') => return Box::new(computer_player::MinimaxComputerPlayer::new(symbol)),
             _ => println!("Invalid entry. Try again.")
         }
     }
