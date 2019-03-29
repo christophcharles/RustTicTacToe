@@ -57,7 +57,7 @@ fn main() {
         let cell = current_player.get_next_move(&state);
 
         if game_logic::play_move(&mut state, &cell, current_player.get_symbol()) {
-            if game_logic::has_someone_won(&state) || game_logic::is_board_full(&state) {
+            if (game_logic::has_someone_won(&state) != None) || game_logic::is_board_full(&state) {
                 break;
             }
 
@@ -69,13 +69,9 @@ fn main() {
 
     game_logic::draw_board(&state);
 
-    if game_logic::has_someone_won(&state) {
-        if cross_turn {
-            println!("Crosses have won!");
-        } else {
-            println!("Circles have won!");
-        }
-    } else {
-        println!("It is a draw.")
+    match game_logic::has_someone_won(&state) {
+        Some(TicTacToeSymbol::Cross) => println!("Crosses have won!"),
+        Some(TicTacToeSymbol::Circle) => println!("Circles have won!"),
+        None => println!("It is a draw."),
     }
 }

@@ -70,6 +70,41 @@ impl MinimaxComputerPlayer {
             symbol: symbol,
         }
     }
+
+    pub fn get_best_score_and_move_for_symbol(&self, game_state: &TicTacToeState, symbol: TicTacToeSymbol)
+        -> (i32, TicTacToeMove) {
+        let mut best_move = TicTacToeMove(0,0);
+        let mut best_score = -1;
+        for i in 0..3 {
+            for j in 0..3 {
+                let new_move = TicTacToeMove(i as u32, j as u32);
+                if game_logic::is_move_valid(game_state, &new_move) {
+                    let mut new_game_state = *game_state;
+                    game_logic::play_move(&mut new_game_state, &new_move, symbol);
+
+                    let move_score = if let Some(winning_symbol) = game_logic::has_someone_won(&new_game_state) {
+                        if winning_symbol == symbol { 1 } else { -1 }
+                    } else if game_logic::is_board_full(&new_game_state) {
+                        0
+                    } else {
+                        let (best_score_for_ennemy, _) = self.get_best_score_and_move_for_symbol(&new_game_state, if symbol == TicTacToeSymbol::Cross {TicTacToeSymbol::Circle } else {TicTacToeSymbol::Cross});
+                        -best_score_for_ennemy
+                    };
+
+                    if move_score >= best_score {
+                        best_score = move_score;
+                        best_move = new_move;
+                    }
+                }
+            }
+        }
+
+        if !game_logic::is_move_valid(game_state, &best_move) {
+            panic!("No valid move found");
+        }
+
+        (best_score, best_move)
+    }
 }
 
 impl Player<TicTacToeState, TicTacToeMove, TicTacToeSymbol> for MinimaxComputerPlayer {
@@ -77,14 +112,7 @@ impl Player<TicTacToeState, TicTacToeMove, TicTacToeSymbol> for MinimaxComputerP
         self.symbol
     }
     fn get_next_move(&self, game_state: &TicTacToeState) -> TicTacToeMove {
-        loop {
-            let i = rand::thread_rng().gen_range(0,3);
-            let j = rand::thread_rng().gen_range(0,3);
-
-            let computer_move = TicTacToeMove(i as u32, j as u32);
-            if game_logic::is_move_valid(game_state, &computer_move) {
-                return computer_move;
-            }
-        }
+        let (_, best_move) = self.get_best_score_and_move_for_symbol(game_state, self.symbol);
+        best_move
     }
 }

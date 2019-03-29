@@ -19,6 +19,7 @@ pub enum BoardCell {
     Played(TicTacToeSymbol),
 }
 
+#[derive(Clone, Copy)]
 pub struct TicTacToeState {
     pub board: [BoardCell; 9],
 }
@@ -30,5 +31,6 @@ impl TicTacToeState {
         }
     }
 }
+
 
 pub struct TicTacToeMove(u32,u32);
