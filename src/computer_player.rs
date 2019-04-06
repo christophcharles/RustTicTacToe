@@ -72,8 +72,8 @@ impl MinimaxComputerPlayer {
     }
 
     pub fn get_best_score_and_move_for_symbol(&self, game_state: &TicTacToeState, symbol: TicTacToeSymbol)
-        -> (i32, TicTacToeMove) {
-        let mut best_move = TicTacToeMove(0,0);
+        -> (i32, Vec<TicTacToeMove>) {
+        let mut best_moves = Vec::new();
         let mut best_score = -1;
         for i in 0..3 {
             for j in 0..3 {
@@ -91,19 +91,21 @@ impl MinimaxComputerPlayer {
                         -best_score_for_ennemy
                     };
 
-                    if move_score >= best_score {
+                    if move_score > best_score {
                         best_score = move_score;
-                        best_move = new_move;
+                        best_moves = vec![new_move];
+                    } else if move_score == best_score {
+                        best_moves.push(new_move);
                     }
                 }
             }
         }
 
-        if !game_logic::is_move_valid(game_state, &best_move) {
+        if best_moves.is_empty() {
             panic!("No valid move found");
         }
 
-        (best_score, best_move)
+        (best_score, best_moves)
     }
 }
 
@@ -112,7 +114,8 @@ impl Player<TicTacToeState, TicTacToeMove, TicTacToeSymbol> for MinimaxComputerP
         self.symbol
     }
     fn get_next_move(&self, game_state: &TicTacToeState) -> TicTacToeMove {
-        let (_, best_move) = self.get_best_score_and_move_for_symbol(game_state, self.symbol);
-        best_move
+        let (_, best_moves) = self.get_best_score_and_move_for_symbol(game_state, self.symbol);
+        let move_count = best_moves.len();
+        best_moves[rand::thread_rng().gen_range(0,move_count)]
     }
 }

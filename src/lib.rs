@@ -32,5 +32,5 @@ impl TicTacToeState {
     }
 }
 
-
+#[derive(Clone, Copy, PartialEq)]
 pub struct TicTacToeMove(u32,u32);
